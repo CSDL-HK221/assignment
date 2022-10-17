@@ -1,6 +1,8 @@
 import app from "./src/server.js";
+import config from "./config/dbConfig.js";
 
-app.listen(3000, () => {
-    console.log("Server listening on port 3000");
-    }
-);
+const PORT = config.port;
+
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});

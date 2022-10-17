@@ -2,16 +2,11 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const config = {
-    HOST: 'localhost',
-    USER: 'root',
-    PASSWORD: '',
-    DB: 'seq_basics',
-    dialect: 'mysql',
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    host: process.env.DB_HOST,
+    database: process.env.DB_DATABASE,
+    port: process.env.PORT
+};
 
-    pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000,
-    }
-}
+export default config;
