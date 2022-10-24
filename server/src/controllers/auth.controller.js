@@ -4,41 +4,46 @@ import jwt from "jsonwebtoken";
 // import { config } from "../../config/config.js";
 import { HttpStatusCode, sendError, sendErrorServerInterval, sendSucces } from "../helper/client.js";
 
-export const register = (req, res) => {
-    const body = req.body;
+export const register = async (req, res) => {
+    const { firstName, lastName, role, age, email, username, password, confirmPassword } = req.body;
     const salt = genSaltSync(10);
-    body.password = hashSync(body.password, salt);
+    const hashedPassword = hashSync(password, salt);
+    const hashedConfirmPassword = hashSync(confirmPassword, salt);
+    if (password !== confirmPassword) {
+        sendError(res, HttpStatusCode.BAD_REQUEST, "Password and Confirm Password do not match");
+    }
+    try {
+        const user = await pool.query(
+            "INSERT INTO users (firstName, lastName, role, age, email, username, password) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+            [firstName, lastName, role, age, email, username, hashedPassword]
+        );
+        const token = jwt.sign({ user: user.rows[0].id }, process.env.JWT_SECRET_KEY, {
+            expiresIn: "1h",
+        });
+        sendSucces(res, { token });
+    }
+    catch (error) {
+        sendErrorServerInterval(res, error);
+    }
+};
 
-    pool.query(
-        "INSERT INTO users SET ?",
-        body,
-        (error, results, fields) => {
-            if (error) {
-                return sendErrorServerInterval(res);
-            }
-            return sendSucces(res, "User registered successfully", results);
+export const login = async (req, res) => {
+    const { username, password } = req.body;
+    try {
+        const user = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
+        if (user.rows.length === 0) {
+            sendError(res, HttpStatusCode.BAD_REQUEST, "Invalid Credentials");
         }
-    );
-}
-
-export const login = (req, res) => {
-    const body = req.body;
-
-    pool.query(
-        "SELECT * FROM users WHERE email = ?",
-        body.email,
-        (error, results, fields) => {
-            if (error) {
-                return sendErrorServerInterval(res);
-            }
-            if (!results || !compareSync(body.password, results[0].password)) {
-                return sendError(res, HttpStatusCode.UNAUTHORIZED, "Invalid email or password");
-            }
-            results.password = undefined;
-            const jsontoken = jwt.sign({ result: results }, "qwe1234", {
-                expiresIn: "1h",
-            });
-            return res.json({ success: 1, message: "login successfully", token: jsontoken });
+        const validPassword = compareSync(password, user.rows[0].password);
+        if (!validPassword) {
+            sendError(res, HttpStatusCode.BAD_REQUEST, "Invalid Credentials");
         }
-    );
+        const token = jwt.sign({ user: user.rows[0].id }, process.env.JWT_SECRET, {
+            expiresIn: "1h",
+        });
+        sendSucces(res, { token });
+    }
+    catch (error) {
+        sendErrorServerInterval(res, error);
+    }
 }
