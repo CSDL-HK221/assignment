@@ -1,28 +1,28 @@
 import jwt from "jsonwebtoken";
-import { HttpStatusCode, sendError, sendErrorServerInterval, sendSucces } from "../helper/client";
-import { pool } from "../helper/db";
-import { compareSync } from "bcrypt";
+import { HttpStatusCode, sendError, sendErrorServerInterval, sendSucces } from "../helper/client.js";
+import { pool } from "../helper/db.js";
 
-export const deserializeUser = (req, res, next) => {
-    const token = req.headers.authorization;
-    if (!token) {
-        return sendError(res, HttpStatusCode.UNAUTHORIZED, "Access denied. No token provided.");
-    }
-
+export const deserializeUser = async (req, res, next) => {
+    const data = req.headers['authorization'];
+    const accessToken = data?.split(" ")[1];
+    
     try {
-        const decoded = jwt.verify(token, "qwe1234");
-        req.user = decoded;
+        const { payload } = jwt.verify(accessToken, process.env.JWT_SECRET_KEY, { complete: true });
+
+        const user = await pool.query("SELECT * FROM user WHERE id = ?", [payload.id]);
+
+        res.locals.user = user[0];
         next();
-    } catch (ex) {
-        return sendError(res, HttpStatusCode.UNAUTHORIZED, "Invalid token.");
+    } catch (error) {
+        return sendError(res, HttpStatusCode.UNAUTHORIZED, "Unauthorized");
     }
 }
 
 export const requireUser = (req, res, next) => {
-    const { user } = req.locals;
+    const { user } = res.locals;
 
-    if (!req.user) {
-        return sendError(res, HttpStatusCode.UNAUTHORIZED, "Access denied. No token provided.");
+    if (!user) {
+        return sendError(res, HttpStatusCode.UNAUTHORIZED, "Unauthorized.");
     }
     next();
 }
