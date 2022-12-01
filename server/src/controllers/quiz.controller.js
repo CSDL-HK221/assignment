@@ -1,14 +1,11 @@
 import { pool } from "../helper/db.js";
 import { sendError, sendSucces, sendErrorServerInterval } from "../helper/client.js";
 
-export const getAllQuizByAnswerId = async (req, res) => {
+export const getAllQuizByLessonId= async (req, res) => {
     try {
-        const { answerId } = req.params;
-        const [quizs]  = await pool.query(
-        `SELECT * FROM quiz WHERE answer_id = ?`,
-        [answerId]
-        );
-        sendSucces(res, quizs[0]);
+        const { id } = req.params;
+        const [quiz] = await pool.query(`SELECT * FROM quiz WHERE lesson_id = ?`, [id]);
+        sendSucces(res,"Get all quiz successfully" , quiz[0]);
     } catch (error) {
         sendErrorServerInterval(res, error);
     }

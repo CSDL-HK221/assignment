@@ -14,6 +14,19 @@ export const getAllCommentOnLesson = async (req, res) => {
     }
 }
 
+export const getAllCOmmentOnPost = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const [comments]  = await pool.query(
+        `SELECT * FROM comment WHERE post_id = ?`,
+        [postId]
+        );
+        sendSucces(res, comments[0]);
+    } catch (error) {
+        sendErrorServerInterval(res, error);
+    }
+}
+
 export const getCommentById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -31,7 +44,7 @@ export const createComment = async (req, res) => {
     try {
         const { content, lesson_id, user_id } = req.body;
         const [comments]  = await pool.query(
-        `INSERT INTO comment (content, lesson_id, user_id) VALUES (?, ?, ?)`,
+        `INSERT INTO comment (content, lesson_id, post_id, user_id) VALUES (?, ?, ?, ?)`,
         [content, lesson_id, user_id]
         );
         sendSucces(res, "Create comment successfully", comments[0]);
@@ -43,10 +56,10 @@ export const createComment = async (req, res) => {
 export const updateCommentById = async (req, res) => {
     try {
         const { id } = req.params;
-        const { content, lesson_id, user_id } = req.body;
+        const { content, user_id } = req.body;
         const [comments]  = await pool.query(
-        `UPDATE comment SET content = IFNULL(?, content), lesson_id = IFNULL(?, lesson_id), user_id = IFNULL(?, user_id) WHERE id = ?`,
-        [content, lesson_id, user_id, id]
+        `UPDATE comment SET content = IFNULL(?, content) WHERE id = ?`,
+        [content, id]
         );
         sendSucces(res, "Update comment successfully", comments[0]);
     } catch (error) {

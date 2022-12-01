@@ -17,7 +17,6 @@ export const register = async (req, res) => {
             "INSERT INTO user (firstName, lastName, role, age, email, phone, username, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             [firstName, lastName, role, age, email, phone, username, hashedPassword]
         )
-        console.log(hashedPassword);
         const accessToken = jwt.sign({ id: user.insertId }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" }); 
         sendSucces(res, "register successfully", { accessToken });
     }
@@ -40,6 +39,15 @@ export const login = async (req, res) => {
         }
         const accessToken = jwt.sign({ id: user[0].id }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
         sendSucces(res, "login successfully", { user: omit(user[0], "password"), accessToken });
+    }
+    catch (error) {
+        sendErrorServerInterval(res, error);
+    }
+}
+
+export const logout = async (req, res) => {
+    try {
+        sendSucces(res, "logout successfully");
     }
     catch (error) {
         sendErrorServerInterval(res, error);

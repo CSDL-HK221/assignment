@@ -1,7 +1,9 @@
 import { Router } from "express";
 import { getAllCommentOnLesson, getCommentById, createComment, updateCommentById, deleteCommentById  } from "../controllers/comment.controller.js";
+import { authenticate } from "../middleware/authenticate.js";
 
 const router = Router();
+router.use(authenticate());
 
 router.get("/", (req, res) => {
     res.send("this is comment route");

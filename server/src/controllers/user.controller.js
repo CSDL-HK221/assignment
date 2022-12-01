@@ -81,3 +81,28 @@ export const deleteUserById = async (req, res) => {
     }
 }
 
+export const courseRegister = async (req, res) => {
+    const user = res.locals.user;
+    const { courseId } = req.body;
+    try {
+        const [course] = await pool.query("SELECT * FROM course WHERE id = ?", [courseId]);
+        if (course.length === 0) {
+            sendError(res, HttpStatusCode.NOT_FOUND, "Course not found");
+        }
+        const [relatedCourse] = await pool.query("SELECT * FROM relatedCourse WHERE courseId= ? ", [courseId]);
+        if (relatedCourse.length !== 0) {
+            const [checkPreCourse] = await pool.query("SELECT * FROM completedCourse WHERE userId = ? AND courseId = ?", [user.id, relatedCourse[0].relatedCourseId]);
+            if (checkPreCourse.length === 0) {
+                sendError(res, HttpStatusCode.BAD_REQUEST, "You have not completed the prerequisite course");
+            }
+        } 
+
+        await pool.query("INSERT INTO enroll (userId, courseId) VALUES (?, ?)", [user.id, courseId]);
+        await pool.query("UPDATE course SET courseMember = courseMember + 1 WHERE id = ?", [courseId]);
+        sendSucces(res, "Course register successfully");
+
+    }
+    catch (error) {
+        sendErrorServerInterval(res, error);
+    }
+}
