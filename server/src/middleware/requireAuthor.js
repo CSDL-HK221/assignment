@@ -56,7 +56,8 @@ export const requireAuthorCourseMiddleware = async (req, res, next) => {
 
     try {
         const [course] = await pool.query("SELECT * FROM course WHERE id = ?", [id]);
-
+        console.log(course[0].authorId);
+        console.log(user[0].id);
         if(course[0].authorId !== user[0].id && user[0].role !== "admin") {
             return sendError(res, HttpStatusCode.FORBIDDEN, "You are not author");
         }

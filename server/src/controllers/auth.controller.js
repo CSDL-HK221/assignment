@@ -1,24 +1,19 @@
 import { pool } from "../helper/db.js";
-import { hashSync, genSaltSync, compareSync } from "bcrypt";
 import omit from "lodash.omit";
 import jwt from "jsonwebtoken";
 // import { config } from "../../config/config.js";
 import { HttpStatusCode, sendError, sendErrorServerInterval, sendSucces } from "../helper/client.js";
 
 export const register = async (req, res) => {
-    const { firstName, lastName, role, age, email, phone, username, password, confirmPassword } = req.body;
-    const salt = genSaltSync(10);
-    const hashedPassword = hashSync(password, salt);
-    if (password !== confirmPassword) {
-        sendError(res, HttpStatusCode.BAD_REQUEST, "Password and Confirm Password do not match");
-    }
+    const { firstName, lastName, role, dob, email, phone, username, password } = req.body;
     try {
         const user = await pool.query(
-            "INSERT INTO user (firstName, lastName, role, age, email, phone, username, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            [firstName, lastName, role, age, email, phone, username, hashedPassword]
+            "INSERT INTO user (firstName, lastName, role, dob, email, phone, username, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            [firstName, lastName, role, dob, email, phone, username, password]
         )
+        console.log(user[0]);
         const accessToken = jwt.sign({ id: user.insertId }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" }); 
-        sendSucces(res, "register successfully", { accessToken });
+        sendSucces(res, "register successfully", { user: omit(user[0], "password"), accessToken });
     }
     catch (error) {
         sendErrorServerInterval(res, error);
@@ -33,8 +28,7 @@ export const login = async (req, res) => {
         if (user.length === 0) {
             sendError(res, HttpStatusCode.NOT_FOUND, "User not found");
         }
-        const validPassword = compareSync(password, user[0].password);
-        if (!validPassword) {
+        if (password !== user[0].password) {
             sendError(res, HttpStatusCode.BAD_REQUEST, "Invalid Password");
         }
         const accessToken = jwt.sign({ id: user[0].id }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });

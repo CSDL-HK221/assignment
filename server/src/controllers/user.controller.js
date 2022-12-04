@@ -91,7 +91,7 @@ export const courseRegister = async (req, res) => {
         }
         const [relatedCourse] = await pool.query("SELECT * FROM relatedCourse WHERE courseId= ? ", [courseId]);
         if (relatedCourse.length !== 0) {
-            const [checkPreCourse] = await pool.query("SELECT * FROM completedCourse WHERE userId = ? AND courseId = ?", [user.id, relatedCourse[0].relatedCourseId]);
+            const [checkPreCourse] = await pool.query("SELECT * FROM enroll WHERE userId = ? AND courseId = ? AND completed = 1", [user.id, relatedCourse[0].relatedCourseId]);
             if (checkPreCourse.length === 0) {
                 sendError(res, HttpStatusCode.BAD_REQUEST, "You have not completed the prerequisite course");
             }

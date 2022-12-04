@@ -25,10 +25,10 @@ export const getCourseById = async (req, res) => {
 
 export const createCourse = async (req, res) => {
     const {user} = res.locals;
-    req.body.authorId = user[0].id;
-    const { name, description, authorId, category, numOfLessons, duration, images } = req.body;
+    req.body.author_id = user[0].id;
+    const { name, description, author_id, category, duration, image } = req.body;
     try {
-        const [course] = await pool.query('INSERT INTO course (name, description, authorId, category, numOfLessons, duration, images) VALUES (?, ?, ?, ?, ?, ?, ?)', [name, description, authorId, category, numOfLessons, duration, images]);
+        const [course] = await pool.query('CALL INSERT_course(?,?,?,?,?,?)', [author_id, name, description, category, image, duration]);
         sendSucces(res, 'Create course successfully', course[0]);
     } catch (error) {
         console.log(error);

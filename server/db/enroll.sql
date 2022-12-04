@@ -1,6 +1,7 @@
 CREATE TABLE enroll (
     userId int(11) NOT NULL,
     courseId int(11) NOT NULL,
+    completed boolean DEFAULT 0,
     PRIMARY KEY (userId, courseId),
     FOREIGN KEY (userId) REFERENCES user(id),
     FOREIGN KEY (courseId) REFERENCES course(id)
