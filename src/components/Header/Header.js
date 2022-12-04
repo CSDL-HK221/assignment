@@ -1,4 +1,4 @@
-import React from "react";
+import {useState, useRef, useEffect, useContext} from 'react';
 import "./Header.scss";
 import { Link } from "react-router-dom";
 import menu from "../../img/menu.png";
@@ -9,8 +9,10 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import avatar from '../../img/avatar.png'
 //import useAuth from "../../hooks/useAuth";
 
+import AuthContext from '../../context/AuthProvider';
+
 const Header = () => {
-   //const { user, logOut } = useAuth();
+   const { auth, setAuth } = useContext(AuthContext)
 
    return (
       <nav className="navbar navbar-expand-md fixed-top">
@@ -53,7 +55,7 @@ const Header = () => {
                   </li>
                </ul>
             </div>
-               {true ? (
+               {auth?.username ? (
                   <>
                   <span className="avatar order-3" style={{cursor: "pointer", position: "relative"}}>
                      <Dropdown align="end">

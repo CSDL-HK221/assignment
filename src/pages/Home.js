@@ -1,8 +1,9 @@
 import Banner from "../components/Banner/Banner";
 import CourseCard from "../components/CourseCard/CourseCard";
+import {useAllCourses} from "../hooks/course"
 
 const Home = () => {
-   const courses = require('../data/course.json')
+   const [courses] = useAllCourses()
    return (
       <>
          <Banner/>

@@ -1,7 +1,8 @@
 import CourseCard from "../components/CourseCard/CourseCard";
+import {useAllCourses} from "../hooks/course";
 
 const Courses = () => {
-    const courses = require('../data/course.json')
+    const [courses] = useAllCourses()
     return (
         <section className="main">
             <div className="container">

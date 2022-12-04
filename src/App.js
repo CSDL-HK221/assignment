@@ -10,24 +10,29 @@ import Posts from './pages/Posts'
 import PostDetails from './pages/PostDetails/PostDetails'
 import Register from './pages/Register'
 import Footer from './components/Footer/Footer'
+import {AuthProvider} from './context/AuthProvider'
+
 import './App.scss'
 
 function App() {
   return (
     <>
+    <AuthProvider>
       <Header></Header>
-        <Routes>
-          <Route path="/" element = {<Home/>}/>
-          <Route path="home" element = {<Home/>}/>
-          <Route path="courses" element = {<Courses/>}/>
-          <Route path="/course/:courseId" element = {<CourseDetails/>}/>
-          <Route path="lessons" element = {<LessonDetails/>}/>
-          <Route path="blog" element = {<Posts/>}/>
-          <Route path="/blog/:postId" element = {<PostDetails/>}/>
-          <Route path="login" element = {<Login/>}/>
-          <Route path="register" element = {<Register/>}/>
-          <Route path="profile" element = {<Profile/>}/>
-        </Routes>
+        
+          <Routes>
+            <Route path="/" element = {<Home/>}/>
+            <Route path="home" element = {<Home/>}/>
+            <Route path="courses" element = {<Courses/>}/>
+            <Route path="/course/:id" element = {<CourseDetails/>}/>
+            <Route path="lesson" element = {<LessonDetails/>}/>
+            <Route path="blog" element = {<Posts/>}/>
+            <Route path="/blog/:id" element = {<PostDetails/>}/>
+            <Route path="login" element = {<Login/>}/>
+            <Route path="register" element = {<Register/>}/>
+            <Route path="profile" element = {<Profile/>}/>
+          </Routes>
+        </AuthProvider>
       <Footer></Footer>
     </>
   );

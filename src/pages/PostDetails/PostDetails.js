@@ -4,11 +4,11 @@ import './PostDetails.scss'
 
 const PostDetails = () => {
     const posts = require('../../data/posts.json')
-    const { postId } = useParams();
+    const { id } = useParams();
     const [details, setDetails] = useState({});
     useEffect(() => {
         if (posts.length) {
-           const matchedPost = posts.find((post) => post.id === postId);
+           const matchedPost = posts.find((post) => post.id === id);
            setDetails(matchedPost);
         }
      }, [posts]);

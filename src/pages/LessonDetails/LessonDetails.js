@@ -6,14 +6,23 @@ const LessonDetails = () => {
     return (
         <div className="main details-section">
             <div className="container-lg">
-                <div className="detail-box">
+                <div className="detail-box mb-5">
                     <h3>SQL</h3>
+                    <div className="instructor">
+                         <div className="box">
+                            <h5>Tác giả</h5>
+                            <p className="mb-0">hello</p>
+                         </div>
+                    </div>
                 </div>
                 <div className="row">
-                    <div className="col-4 lessons">
-
+                    <div className="d-none d-sm-none d-md-block col-md-4 lessons">
+                        <h3 className="mb-3">Tiến trình</h3>
+                        <div></div>
                     </div>
-                    <div className="col-8">
+                    <div className="col-12 col-md-8">
+                        <h3 className="mb-3">Tên bài học</h3>
+                        <div>
                         <p>
                         The following example shows how this can be done.
 
@@ -56,6 +65,11 @@ MongoDB Update() Document
 
 The output clearly shows that one record matched the condition and hence the relevant field value was modified.
                         </p>
+                        </div>
+                    <div class="change-lesson d-flex justify-content-between">
+                        <button>Prev</button>
+                        <button>Next</button>
+                    </div>
                     </div>
                 </div>
             </div>

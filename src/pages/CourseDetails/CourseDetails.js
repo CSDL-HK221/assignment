@@ -2,32 +2,24 @@ import React, { useEffect, useState } from "react";
 import {FaUserFriends, FaBookOpen, FaClock} from 'react-icons/fa'
 import "./CourseDetails.scss";
 import { useParams } from "react-router-dom";
-
+import {useAllCourses} from "../../hooks/course"
+import {useCourseById }from "../../hooks/course";
+import {useGetUserById}from "../../hooks/user";
 const CourseDetails = () => {
-    const courses = require('../../data/course.json')
-    const allLessons = require('../../data/lesson.json')
-    const [details, setDetails] = useState({});
-    const [lesson, setLesson] = useState([]);
-    const { courseId } = useParams();
- 
-    useEffect(() => {
-       if (courses.length) {
-          const matchedData = courses.find((course) => course.id === courseId);
-          const matchedLessons = allLessons.filter((e) => e.courseId === courseId);
-          setDetails(matchedData);
-          setLesson(matchedLessons);
-       }
-    }, [courses]);
-    const {
+   const {id} = useParams();
+    
+   const [details] = useCourseById(id)
+   const {
        name,
        category,
        duration,
-       lessons,
+       numOfLessons,
        image,
        description,
-       author,
+       author_id,
     } = details;
- 
+    
+    const [author] = useGetUserById(id)
     return (
        <div className="main details-section">
           <div className="container">
@@ -39,7 +31,7 @@ const CourseDetails = () => {
                       <div className="instructor">
                          <div className="box">
                             <h5>Tác giả</h5>
-                            <p className="mb-0">{author}</p>
+                            <p className="mb-0">{author.username}</p>
                          </div>
                       </div>
                       <div className="bottom-area">
@@ -59,9 +51,9 @@ const CourseDetails = () => {
                            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
                               <h4>Nội dung khóa học</h4>
                               {
-                                 lesson.map((e, index) => 
-                                    <h6>{index + 1}. {e.name}</h6>
-                                 )
+                                 /*lesson.map((e, index) => 
+                                    <h6>{index + 1}. {name}</h6>
+                                 )*/
                               }
                            </div>
                         </div>                   
@@ -103,7 +95,7 @@ const CourseDetails = () => {
                                  <FaBookOpen className="icon"/>{" "}
                                   lessons
                                </span>
-                               <span>{lessons}</span>
+                               <span>{numOfLessons}</span>
                             </li>
                             <li>
                                <span>

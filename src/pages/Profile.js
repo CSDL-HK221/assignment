@@ -30,6 +30,18 @@ const Profile = () => {
                            <input className="form-control" placeholder="Nhập password"/>
                         </div>
                         <div className="form-group col-12">
+                           <label htmlFor="">First Name</label>
+                           <input className="form-control" placeholder="Nhập firstname"/>
+                        </div>
+                        <div className="form-group col-12">
+                           <label htmlFor="">First Name</label>
+                           <input className="form-control" placeholder="Nhập lastname"/>
+                        </div>
+                        <div className="form-group col-12">
+                           <label htmlFor="">Ngày sinh</label>
+                           <input className="form-control" placeholder="Nhập lastname"/>
+                        </div>
+                        <div className="form-group col-12">
                            <label htmlFor="">Số điện thoại</label>
                            <input className="form-control" placeholder="Nhập số điện thoại"/>
                         </div>
