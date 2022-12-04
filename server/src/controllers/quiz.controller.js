@@ -63,3 +63,19 @@ export const deleteQuizById = async (req, res) => {
         return sendErrorServerInterval(res, error);
     }
 }
+
+export const memberLearnQuiz = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { answer_id } = req.body;
+        const { user } = res.locals;
+        const [quizs]  = await pool.query(
+        `CALL INSERT_student_answer(?, ?, ?);`,
+        [user[0].id, id, answer_id]
+        );
+        return sendSucces(res, "Member learn quiz successfully", quizs[0]);
+    } catch (error) {
+        console.log(error);
+        return sendErrorServerInterval(res, error);
+    }
+}

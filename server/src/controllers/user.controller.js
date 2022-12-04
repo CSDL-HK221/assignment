@@ -81,14 +81,30 @@ export const deleteUserById = async (req, res) => {
     }
 }
 
-export const courseRegister = async (req, res) => {
+export const userEnrollCourse = async (req, res) => {
     const user = res.locals.user;
     const { id } = req.params;
     try {
         const [course] = await pool.query("CALL INSERT_enroll(?,?)", [user[0].id,id]);
-        return sendSucces(res, "Course register successfully");
+        return sendSucces(res, "Course register successfully", course[0][0].messenge);
     }
     catch (error) {
+        return sendErrorServerInterval(res, error);
+    }
+}
+
+export const getEnrollByIdCourse = async (req, res) => {
+    const { id } = req.params;
+    const user = res.locals.user;
+    try {
+        const [course] = await pool.query("SELECT * FROM enroll WHERE user_id = ? AND course_id", [user[0].id,id]);
+        if (course.length === 0) {
+            return sendError(res, HttpStatusCode.OK, "Enroll now!");
+        }
+        return sendSucces(res, HttpStatusCode.OK, "Learn continue.");
+    }
+    catch (error) {
+        console.log(error);
         return sendErrorServerInterval(res, error);
     }
 }
