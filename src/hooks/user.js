@@ -2,14 +2,15 @@ import axios from 'axios';
 import config from '../config/config'
 import { useEffect, useState } from "react";
 
-const GetUser = async() =>{
-   try{
+export const useGetUser = async() =>{
+   /*try{
       const response = await axios.get(`${config.URL_API}/`)
       return response
    }
    catch(err){
       console.log(err)
-   }
+   }*/
+   
 }
 
 export const useGetUserById = (id) => {

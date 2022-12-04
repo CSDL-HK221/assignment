@@ -19,11 +19,11 @@ export const useCourseById = (id) => {
     return [course];
 }
 
-/*export const useLessonsFromCourse = () => {
+export const useLessonsFromCourse = (id) => {
     const [lessons, setLessons] = useState([]);
     useEffect(() => {
-        axios(`http://localhost:3000/api/course/${id}`)
-        .then(res => {setCourse(res.data.data)})
+        axios(`http://localhost:3000/api/lesson/getAll/${id}`)
+        .then(res => {setLessons(res.data.data)})
     }, []);
-    return [course];
-}*/
+    return [lessons];
+}

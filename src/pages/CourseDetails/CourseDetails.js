@@ -1,25 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, {useContext} from "react";
 import {FaUserFriends, FaBookOpen, FaClock} from 'react-icons/fa'
 import "./CourseDetails.scss";
 import { useParams } from "react-router-dom";
-import {useAllCourses} from "../../hooks/course"
-import {useCourseById }from "../../hooks/course";
+import {useCourseById, useLessonsFromCourse} from "../../hooks/course"
 import {useGetUserById}from "../../hooks/user";
+import AuthContext from '../../context/AuthProvider';
+import { Link } from "react-router-dom";
+
 const CourseDetails = () => {
+   const { auth, setAuth } = useContext(AuthContext)
    const {id} = useParams();
-    
    const [details] = useCourseById(id)
    const {
-       name,
-       category,
-       duration,
-       numOfLessons,
-       image,
-       description,
-       author_id,
-    } = details;
-    
-    const [author] = useGetUserById(id)
+         name,
+         category,
+         duration,
+         numOfLessons,
+         image,
+         description,
+   } = details;
+      
+   const [author] = useGetUserById(id)
+   const [lessons] = useLessonsFromCourse(id)
+   
     return (
        <div className="main details-section">
           <div className="container">
@@ -50,11 +53,12 @@ const CourseDetails = () => {
                            </div>
                            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
                               <h4>Nội dung khóa học</h4>
-                              {
-                                 /*lesson.map((e, index) => 
-                                    <h6>{index + 1}. {name}</h6>
-                                 )*/
-                              }
+                              
+                                 {
+                                    lessons?.map((lesson, index) => 
+                                       <h6>{index + 1}. {name}</h6>
+                                    )
+                                 }
                            </div>
                         </div>                   
                       </div>
@@ -66,19 +70,14 @@ const CourseDetails = () => {
                          <img className="img-fluid" src={image} alt="" />
                       </div>
                       <div className="info-box">
-                         {true ? (
-                            <form
-                               className="mb-0 text-start"
-                            >
-                               <button type="submit" className="btn-black">
-                                  Đăng kí học
-                               </button>
-                            </form>
+                         {!auth?.username ? (
+                           <Link to = "/login">
+                              <button className="btn-black">
+                                 Đăng kí học
+                              </button>
+                           </Link>
                          ) : (
-                            <button
-                               
-                               className="btn-black"
-                            >
+                            <button className="btn-black">
                                Đăng kí học
                             </button>
                          )}

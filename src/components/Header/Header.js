@@ -5,15 +5,26 @@ import menu from "../../img/menu.png";
 import logo from "../../img/logo.png";
 import userIcon from "../../img/user.png";
 import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
 import avatar from '../../img/avatar.png'
-//import useAuth from "../../hooks/useAuth";
-
+import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../context/AuthProvider';
+import axios from 'axios'
 
 const Header = () => {
    const { auth, setAuth } = useContext(AuthContext)
-
+   const navigate = useNavigate();
+   const handleLogout = async () => {
+      try {
+         const res = await axios.post('http://localhost:3000/api/auth/logout');
+         setAuth({});
+         navigate('/')
+      } catch (err) {
+            if (!err?.response) {
+               alert("Sever không phản hồi.");
+            }
+            else alert("Đăng xuất thất bại.");
+      }
+   }
    return (
       <nav className="navbar navbar-expand-md fixed-top">
          <div className="container-lg">
@@ -65,11 +76,13 @@ const Header = () => {
                            </span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
-                           <Dropdown.Item eventKey="1" href="profile">Thông tin cá nhân</Dropdown.Item>
-                           <Dropdown.Item eventKey="2" href="user-courses">Khóa học đã đăng kí</Dropdown.Item>
-                           <Dropdown.Item eventKey="3" href="user-posts">Bài viết của tôi</Dropdown.Item>
+                           <Dropdown.Item onClick={() => navigate('/profile')}>Thông tin cá nhân</Dropdown.Item>
+                           <Dropdown.Item onClick={() => navigate('/user-courses')}>Khóa học đã đăng kí</Dropdown.Item>
+                           <Dropdown.Item onClick={() => navigate('/user-posts')}>Bài viết của tôi</Dropdown.Item>
                            <Dropdown.Divider />
-                           <Dropdown.Item eventKey="4">Đăng xuất</Dropdown.Item>
+                           {auth?.role === 'instructor' ? <Dropdown.Item href='/instructor-courses'>Khóa học của tôi</Dropdown.Item> : <></>}
+                           {auth?.role === 'admin' ? <Dropdown.Item href='/users'>Danh sách users</Dropdown.Item> : <></>}
+                           <Dropdown.Item onClick={() => handleLogout()}>Đăng xuất</Dropdown.Item>
                         </Dropdown.Menu>
                      </Dropdown>
                   </span>

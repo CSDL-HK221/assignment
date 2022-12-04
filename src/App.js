@@ -10,16 +10,14 @@ import Posts from './pages/Posts'
 import PostDetails from './pages/PostDetails/PostDetails'
 import Register from './pages/Register'
 import Footer from './components/Footer/Footer'
-import {AuthProvider} from './context/AuthProvider'
+
 
 import './App.scss'
 
 function App() {
   return (
     <>
-    <AuthProvider>
       <Header></Header>
-        
           <Routes>
             <Route path="/" element = {<Home/>}/>
             <Route path="home" element = {<Home/>}/>
@@ -32,8 +30,7 @@ function App() {
             <Route path="register" element = {<Register/>}/>
             <Route path="profile" element = {<Profile/>}/>
           </Routes>
-        </AuthProvider>
-      <Footer></Footer>
+        <Footer></Footer>
     </>
   );
 }

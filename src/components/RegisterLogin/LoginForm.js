@@ -1,26 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import homeBg from "../../img/thumbnail.png";
 import "./RegLogForm.scss";
 import axios from 'axios'
+import AuthContext from '../../context/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
    const [account, setAccount] = useState({})
+   const { auth, setAuth } = useContext(AuthContext)
+   const navigate = useNavigate();
+
    const handleChange = (e) => {
       setAccount({
           ...account,
           [e.target.name]: e.target.value
       })
    }
-   console.log(account)
+
    const handleLogin = async (e) => {
       e.preventDefault();
       try {
-         axios.post(`http://localhost:3000/api/auth/login`,
-                     {"username": account.username, "password": account.pasword})
-         .then(res => console.log(res))
-     } catch (err) {
-      
+         const res = await axios.post(`http://localhost:3000/api/auth/login`,
+                     {"username": account.username, "password": account.password},
+                     {
+                        'Content-Type': 'application/json',
+                    });
+         const role = res?.data.data.user.role;
+         console.log(res.data.data)
+         setAuth(res.data.data.user)
+         console.log(role)
+         navigate(`/`);
+     } catch (e) {
+         if (e.response?.status === 400) {
+            alert("Thiếu tên đăng nhập hoặc mật khẩu.");
+         }
+         else if (e.response?.status === 401) {
+            alert("Sai mật khẩu.");
+         } else {
+            alert("Không tìm thấy người dùng có tên đăng nhập này");
+         } 
      }
    }
    return (
@@ -39,8 +58,8 @@ const LoginForm = () => {
                      <form className="mb-0 text-start" onSubmit={handleLogin}>
                         <div className="row">
                            <div className="form-group col-12">
-                              <label htmlFor="">Email</label>
-                              <input className="form-control" placeholder="Nhập email" name="email" onChange={handleChange}/>
+                              <label htmlFor="">Username</label>
+                              <input className="form-control" placeholder="Nhập username" name="username" onChange={handleChange}/>
                            </div>
                            <div className="form-group col-12">
                               <label htmlFor="">Password</label>

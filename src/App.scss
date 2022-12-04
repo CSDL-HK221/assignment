@@ -31,8 +31,11 @@
  h6 {
    font-weight: 600 !important;
  }
+ a {
+   text-decoration: none !important;
+ }
  .link {
-    text-decoration: none;
+    
     color: #121619;
     transition: 0.4s;
     &:hover {
@@ -55,16 +58,17 @@
  .btn-black {
     background: black;
     border: 1px solid black;
-    color: #fff;
     font-weight: 600;
     font-style: 16px;
     height: 50px;
     width: 100px;
     border-radius: 3px;
     transition: 0.4s;
+    color: #fff !important;
+    
     &:hover {
        background: transparent;
-       color: black;
+       color: black !important;
     }
  }
  .home-pre-loader {
