@@ -1,0 +1,28 @@
+/* FOOTER */
+.footer {
+    background: #EBEBEBff;
+    padding: 200px 0 100px 0;
+    margin-top: 50px;
+    position: relative;
+    overflow: hidden;
+ }
+ .footer::before {
+    content: "";
+    width: 102%;
+    height: 200px;
+    background: #fff;
+    position: absolute;
+    top: -116px;
+    right: 0;
+    transform: rotate(-5deg);
+    z-index: 1;
+ }
+
+ .footer .nav-item {
+    margin-bottom: 10px;
+ }
+ .footer .link {
+    font-size: 14px;
+    color: #77838f;
+    margin-bottom: 25px;
+ }
