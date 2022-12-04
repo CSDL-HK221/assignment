@@ -33,7 +33,7 @@ const LoginForm = () => {
          navigate(`/`);
      } catch (e) {
          if (e.response?.status === 400) {
-            alert("Thiếu tên đăng nhập hoặc mật khẩu.");
+            alert("Sai mật khẩu");
          }
          else if (e.response?.status === 401) {
             alert("Sai mật khẩu.");

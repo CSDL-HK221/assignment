@@ -23,6 +23,9 @@ const CourseDetails = () => {
    const [author] = useGetUserById(id)
    const [lessons] = useLessonsFromCourse(id)
    
+   if (auth) {
+      
+   }
     return (
        <div className="main details-section">
           <div className="container">

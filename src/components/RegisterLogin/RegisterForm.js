@@ -66,7 +66,7 @@ const RegisterForm = () => {
                            </div>
                            <div className="form-group col-12">
                               <label htmlFor="">Nhập lại password</label>
-                              <input type = "password" className="form-control" placeholder="Nhập lại password" name="confirmPassword" onChange={handleChange}/>
+                              <input type = "password" className="form-control" placeholder="Nhập lại password" name="confirmPassword" onChange={handleChange} required/>
                            </div>
                         </div>
                         <div className="d-flex justify-content-between">
