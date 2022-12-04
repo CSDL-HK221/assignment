@@ -6,12 +6,12 @@ import { HttpStatusCode, sendError, sendErrorServerInterval, sendSucces } from "
 
 export const register = async (req, res) => {
     const { role, email, username, password } = req.body;
+    console.log(req.body);
     try {
         const user = await pool.query(
             "CALL INSERT_user(?, ?, ?, ?)",
-            [role, email, username, password]
+            [username, password, email, role]
         )
-        console.log(user[0]);
         const accessToken = jwt.sign({ id: user.insertId }, process.env.JWT_SECRET_KEY, { expiresIn: "1d" }); 
         return sendSucces(res, "register successfully", { user: omit(user[0], "password"), accessToken });
     }
