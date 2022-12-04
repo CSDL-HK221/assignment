@@ -5,9 +5,9 @@ export const getAllQuizByLessonId= async (req, res) => {
     try {
         const { id } = req.params;
         const [quiz] = await pool.query(`SELECT * FROM quiz WHERE lesson_id = ?`, [id]);
-        sendSucces(res,"Get all quiz successfully" , quiz[0]);
+        return sendSucces(res,"Get all quiz successfully" , quiz[0]);
     } catch (error) {
-        sendErrorServerInterval(res, error);
+        return sendErrorServerInterval(res, error);
     }
 }
 
@@ -18,9 +18,9 @@ export const getQuizById = async (req, res) => {
         `SELECT * FROM quiz WHERE id = ?`,
         [id]
         );
-        sendSucces(res, quizs[0]);
+        return sendSucces(res, quizs[0]);
     } catch (error) {
-        sendErrorServerInterval(res, error);
+        return sendErrorServerInterval(res, error);
     }
 }
 
@@ -31,9 +31,9 @@ export const createQuiz = async (req, res) => {
         `INSERT INTO quiz (content, lesson_id) VALUES (?, ?)`,
         [content, lesson_id]
         );
-        sendSucces(res, "Create quiz successfully", quizs[0]);
+        return sendSucces(res, "Create quiz successfully", quizs[0]);
     } catch (error) {
-        sendErrorServerInterval(res, error);
+        return sendErrorServerInterval(res, error);
     }
 }
 
@@ -45,9 +45,9 @@ export const updateQuizById = async (req, res) => {
         `UPDATE quiz SET content = IFNULL(?, content), lesson_id = IFNULL(?, lesson_id) WHERE id = ?`,
         [content, lesson_id, id]
         );
-        sendSucces(res, "Update quiz successfully", quizs[0]);
+        return sendSucces(res, "Update quiz successfully", quizs[0]);
     } catch (error) {
-        sendErrorServerInterval(res, error);
+        return sendErrorServerInterval(res, error);
     }
 }
 
@@ -58,8 +58,8 @@ export const deleteQuizById = async (req, res) => {
         `DELETE FROM quiz WHERE id = ?`,
         [id]
         );
-        sendSucces(res, "Delete quiz successfully", quizs[0]);
+        return sendSucces(res, "Delete quiz successfully", quizs[0]);
     } catch (error) {
-        sendErrorServerInterval(res, error);
+        return sendErrorServerInterval(res, error);
     }
 }

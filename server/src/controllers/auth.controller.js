@@ -13,7 +13,7 @@ export const register = async (req, res) => {
         )
         console.log(user[0]);
         const accessToken = jwt.sign({ id: user.insertId }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" }); 
-        sendSucces(res, "register successfully", { user: omit(user[0], "password"), accessToken });
+        return sendSucces(res, "register successfully", { user: omit(user[0], "password"), accessToken });
     }
     catch (error) {
         sendErrorServerInterval(res, error);
@@ -26,24 +26,24 @@ export const login = async (req, res) => {
 
         const [user] = await pool.query("SELECT * FROM user WHERE username = ?", [username]);
         if (user.length === 0) {
-            sendError(res, HttpStatusCode.NOT_FOUND, "User not found");
+            return sendError(res, HttpStatusCode.NOT_FOUND, "User not found");
         }
         if (password !== user[0].password) {
-            sendError(res, HttpStatusCode.BAD_REQUEST, "Invalid Password");
+            return sendError(res, HttpStatusCode.BAD_REQUEST, "Invalid Password");
         }
         const accessToken = jwt.sign({ id: user[0].id }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
-        sendSucces(res, "login successfully", { user: omit(user[0], "password"), accessToken });
+        return sendSucces(res, "login successfully", { user: omit(user[0], "password"), accessToken });
     }
     catch (error) {
-        sendErrorServerInterval(res, error);
+        return sendErrorServerInterval(res, error);
     }
 }
 
 export const logout = async (req, res) => {
     try {
-        sendSucces(res, "logout successfully");
+        return sendSucces(res, "logout successfully");
     }
     catch (error) {
-        sendErrorServerInterval(res, error);
+        return sendErrorServerInterval(res, error);
     }
 }

@@ -8,9 +8,9 @@ export const getAllCommentOnLesson = async (req, res) => {
         `SELECT * FROM comment WHERE lesson_id = ?`,
         [lessonId]
         );
-        sendSucces(res, comments[0]);
+        return sendSucces(res, comments[0]);
     } catch (error) {
-        sendErrorServerInterval(res, error);
+        return sendErrorServerInterval(res, error);
     }
 }
 
@@ -21,9 +21,9 @@ export const getAllCOmmentOnPost = async (req, res) => {
         `SELECT * FROM comment WHERE post_id = ?`,
         [postId]
         );
-        sendSucces(res, comments[0]);
+        return sendSucces(res, comments[0]);
     } catch (error) {
-        sendErrorServerInterval(res, error);
+        return sendErrorServerInterval(res, error);
     }
 }
 
@@ -34,9 +34,9 @@ export const getCommentById = async (req, res) => {
         `SELECT * FROM comment WHERE id = ?`,
         [id]
         );
-        sendSucces(res, comments[0]);
+        return sendSucces(res, comments[0]);
     } catch (error) {
-        sendErrorServerInterval(res, error);
+        return sendErrorServerInterval(res, error);
     }
 }
 
@@ -47,9 +47,9 @@ export const createComment = async (req, res) => {
         `INSERT INTO comment (content, lesson_id, post_id, user_id) VALUES (?, ?, ?, ?)`,
         [content, lesson_id, user_id]
         );
-        sendSucces(res, "Create comment successfully", comments[0]);
+        return sendSucces(res, "Create comment successfully", comments[0]);
     } catch (error) {
-        sendErrorServerInterval(res, error);
+        return sendErrorServerInterval(res, error);
     }
 }
 
@@ -61,9 +61,9 @@ export const updateCommentById = async (req, res) => {
         `UPDATE comment SET content = IFNULL(?, content) WHERE id = ?`,
         [content, id]
         );
-        sendSucces(res, "Update comment successfully", comments[0]);
+        return sendSucces(res, "Update comment successfully", comments[0]);
     } catch (error) {
-        sendErrorServerInterval(res, error);
+        return sendErrorServerInterval(res, error);
     }
 }
 
@@ -74,8 +74,8 @@ export const deleteCommentById = async (req, res) => {
         `DELETE FROM comment WHERE id = ?`,
         [id]
         );
-        sendSucces(res, "Delete comment successfully", comments[0]);
+        return sendSucces(res, "Delete comment successfully", comments[0]);
     } catch (error) {
-        sendErrorServerInterval(res, error);
+        return sendErrorServerInterval(res, error);
     }
 }

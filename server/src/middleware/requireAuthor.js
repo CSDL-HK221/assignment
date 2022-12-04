@@ -9,7 +9,7 @@ export const requireAuthorCommentMiddleware = async (req, res, next) => {
 
         const [comment] = await pool.query("SELECT * FROM comment WHERE id = ?", [id]);
 
-        if(comment[0].authorId !== user.id && user.role !== "admin") {
+        if(comment[0].author_id !== user.id && user.role !== "admin") {
             return sendError(res, HttpStatusCode.FORBIDDEN, "You are not author");
         }
 
@@ -33,7 +33,7 @@ export const requireAuthorPostMiddleware = async (req, res, next) => {
 
         const [post] = await pool.query("SELECT * FROM post WHERE id = ?", [id]);
 
-        if(post[0].authorId !== user.id && user.role !== "admin") {
+        if(post[0].author_id !== user.id && user.role !== "admin") {
             return sendError(res, HttpStatusCode.FORBIDDEN, "You are not author");
         }
 
@@ -55,13 +55,11 @@ export const requireAuthorCourseMiddleware = async (req, res, next) => {
     const { user } = res.locals;
 
     try {
-        const [course] = await pool.query("SELECT * FROM course WHERE id = ?", [id]);
-        console.log(course[0].authorId);
-        console.log(user[0].id);
-        if(course[0].authorId !== user[0].id && user[0].role !== "admin") {
+        const [course] = await pool.query("SELECT * FROM course WHERE id = ?", [1]);
+
+        if(course[0].author_id !== user[0].id && user[0].role !== "admin") {
             return sendError(res, HttpStatusCode.FORBIDDEN, "You are not author");
         }
-        console.log(course[0].authorId);
 
         next();
     } catch (error) {
@@ -84,7 +82,7 @@ export const requireAuthorLessonMiddleware = async (req, res, next) => {
     try {
         const [lesson] = await pool.query("SELECT * FROM lesson WHERE id = ?", [id]);
 
-        if(lesson[0].authorId !== user.id && user.role !== "admin") {
+        if(lesson[0].author_id !== user.id && user.role !== "admin") {
             return sendError(res, HttpStatusCode.FORBIDDEN, "You are not author");
         }
 
@@ -108,10 +106,10 @@ export const requireAuthorQuizMiddleware = async (req, res, next) => {
     try {
         const [quiz] = await pool.query("SELECT * FROM quiz WHERE id = ?", [id]);
 
-        if(quiz[0].authorId !== user[0].id && user[0].role !== "admin") {
+        if(quiz[0].author_id !== user[0].id && user[0].role !== "admin") {
             return sendError(res, HttpStatusCode.FORBIDDEN, "You are not author");
         }
-        console.log(quiz[0].authorId);
+        console.log(quiz[0].author_id);
 
         next();
     } catch (error) {

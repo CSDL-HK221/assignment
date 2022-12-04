@@ -6,7 +6,7 @@ import { requireAuthorLesson } from "../middleware/requireAuthor.js";
 
 const router = Router();
 
-router.use(authenticate());
+// router.use(authenticate());
 
 router.get("/", (req, res) => {
     res.send("this is lesson route");

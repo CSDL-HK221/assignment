@@ -4,9 +4,9 @@ import { sendSucces, sendError, sendErrorServerInterval, HttpStatusCode } from '
 export const getAllCourses = async (req, res) => {
     try {
         const [course] = await pool.query('SELECT * FROM course');
-        sendSucces(res, 'Get all courses successfully', course);
+        return sendSucces(res, 'Get all courses successfully', course);
     } catch (error) {
-        sendErrorServerInterval(res, error);
+        return sendErrorServerInterval(res, error);
     }
 }
 
@@ -15,11 +15,11 @@ export const getCourseById = async (req, res) => {
     try {
         const [course] = await pool.query('SELECT * FROM course WHERE id = ?', [id]);
         if (course.length === 0) {
-            sendError(res, HttpStatusCode.NOT_FOUND, 'Course not found');
+            return sendError(res, HttpStatusCode.NOT_FOUND, 'Course not found');
         }
-        sendSucces(res, HttpStatusCode.OK, course[0]);
+        return sendSucces(res, HttpStatusCode.OK, course[0]);
     } catch (error) {
-        sendErrorServerInterval(res, error);
+        return sendErrorServerInterval(res, error);
     }
 }
 
@@ -29,27 +29,27 @@ export const createCourse = async (req, res) => {
     const { name, description, author_id, category, duration, image } = req.body;
     try {
         const [course] = await pool.query('CALL INSERT_course(?,?,?,?,?,?)', [author_id, name, description, category, image, duration]);
-        sendSucces(res, 'Create course successfully', course[0]);
+        return sendSucces(res, 'Create course successfully', course[0]);
     } catch (error) {
         console.log(error);
-        sendErrorServerInterval(res, error);
+        return sendErrorServerInterval(res, error);
     }
 }
 
 export const updateCourseById = async (req, res) => {
     const id = parseInt(req.params.id);
-    const { name, description, authorId, category, courseMembers } = req.body;
+    const { name, description, author_id, category, courseMembers } = req.body;
     try {
         const [course] = await pool.query('SELECT * FROM course WHERE id = ?', [id]);
         if (course.length === 0) {
-            sendError(res, HttpStatusCode.NOT_FOUND, 'Course not found');
+            return sendError(res, HttpStatusCode.NOT_FOUND, 'Course not found');
         }
-        await pool.query('UPDATE course SET name = IFNULL(?, name), description = IFNULL(?, description), authorId = IFNULL(?, authorId), category = IFNULL(?, category), courseMembers = IFNULL(?, courseMembers) WHERE id = ?', [name, description, authorId, category, courseMembers, id]);
+        await pool.query('UPDATE course SET name = IFNULL(?, name), description = IFNULL(?, description), author_id = IFNULL(?, author_id), category = IFNULL(?, category), courseMembers = IFNULL(?, courseMembers) WHERE id = ?', [name, description, author_id, category, courseMembers, id]);
         const [result] = await pool.query('SELECT * FROM course WHERE id = ?', [id]);
-        sendSucces(res, 'Update course successfully', result[0]);
+        return sendSucces(res, 'Update course successfully', result[0]);
     } catch (error) {
         console.log(error);
-        sendErrorServerInterval(res, error);
+        return sendErrorServerInterval(res, error);
     }
 }
 
@@ -58,11 +58,11 @@ export const deleteCourseById = async (req, res) => {
     try {
         const [course] = await pool.query('SELECT * FROM course WHERE id = ?', [id]);
         if (course.length === 0) {
-            sendError(res, HttpStatusCode.NOT_FOUND, 'Course not found');
+            return sendError(res, HttpStatusCode.NOT_FOUND, 'Course not found');
         }
         await pool.query('DELETE FROM course WHERE id = ?', [id]);
-        sendSucces(res, 'Delete course successfully', course[0]);
+        return sendSucces(res, 'Delete course successfully', course[0]);
     } catch (error) {
-        sendErrorServerInterval(res, error);
+        return sendErrorServerInterval(res, error);
     }
 }
