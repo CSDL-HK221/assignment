@@ -74,3 +74,15 @@ export const getCurrentLessonOfCourse = async (req, res) => {
         return sendErrorServerInterval(res, error);
     }
 }
+
+export const completedLesson = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { user } = res.locals;
+        const [score] = await pool.query(`SELECT * FROM score WHERE user_id = ? AND lesson_id = ?`, [user[0].id, id]);
+        const [lesson] = await pool.query(`UPDATE study SET done = 1 WHERE user_id = ? AND lesson_id = ?`, [user[0].id, id]);
+        return sendSucces(res,"Completed lesson successfully" , lesson);
+    } catch (error) {
+        return sendErrorServerInterval(res, error);
+    }
+}
